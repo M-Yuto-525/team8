@@ -1,3 +1,4 @@
+
 import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 
 /**
@@ -17,5 +18,8 @@ public class Shoutengai extends World
     {    
         // Create a new world with 600x400 cells with a cell size of 1x1 pixels.
         super(800, 655, 1); 
+        addObject(new foodman(), 300, 200);
+        addObject(new tenshu1(), 100, 100);
+        addObject(new tenshu2(), 500, 300);
     }
 }
