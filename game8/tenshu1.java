@@ -16,5 +16,6 @@ public class tenshu1
     public void act() 
     {
         // Add your action code here.
+        //test2
     }    
 }
