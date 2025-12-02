@@ -1,6 +1,6 @@
 #Greenfoot project file
 class.Shoutengai.image=test\u5546\u5E97\u8857.png
-class.foodman.image=\u30D5\u30FC\u30C9\u30DE\u30F3.png
+class.foodman.image=\u30D5\u30FC\u30C9\u30DE\u30F32.png
 class.tenshu1.image=\u5E97\u4E3B.png
 class.tenshu2.image=\u5E97\u4E3B.png
 class.testtarou.image=man01.png
@@ -13,10 +13,10 @@ dependency2.type=UsesDependency
 dependency3.from=tenshu2
 dependency3.to=foodman
 dependency3.type=UsesDependency
-editor.fx.0.height=739
-editor.fx.0.width=816
-editor.fx.0.x=552
-editor.fx.0.y=100
+editor.fx.0.height=0
+editor.fx.0.width=0
+editor.fx.0.x=0
+editor.fx.0.y=0
 height=835
 package.numDependencies=3
 package.numTargets=5
