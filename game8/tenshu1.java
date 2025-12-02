@@ -30,7 +30,7 @@ public class tenshu1
             if (this.intersects(protagonist)) 
             {
                  Greenfoot.stop(); 
-                 System.out.println("捕まっちゃった!");
+                 getWorld().showText("GAME OVER", getWorld().getWidth() / 2, getWorld().getHeight() / 2);
             }
         }
     }    
