@@ -1,20 +1,24 @@
 import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 
-/**
- * Write a description of class D here.
- * 
- * @author (your name) 
- * @version (a version number or a date)
- */
-public class tenshu2
- extends Actor
+public class tenshu2 extends Actor
 {
-    /**
-     * Act - do whatever the D wants to do. This method is called whenever
-     * the 'Act' or 'Run' button gets pressed in the environment.
-     */
     public void act() 
     {
-        // Add your action code here.
-    }    
+        // foodman（フードマン）にぶつかったか確認
+        Actor actor = getOneIntersectingObject(foodman.class); 
+        
+        if (actor != null) {
+            // ★ぶつかった場合の処理
+            getWorld().showText("GAME OVER", getWorld().getWidth()/2, getWorld().getHeight()/2);
+            Greenfoot.stop();
+            return;  // ぶつかったら行動を止める
+        }
+
+        // ★ランダムに回転（‐10度〜10度くらい）
+        int randomTurn = Greenfoot.getRandomNumber(21) - 10; 
+        turn(randomTurn);
+
+        // ★前に進む
+        move(4);
+    }
 }
