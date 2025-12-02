@@ -19,17 +19,30 @@ public class foodman
     {
         // Add your action code here.
         //test
-        if (Greenfoot.isKeyDown("up")) {
-            setLocation(getX(), getY() - speed);
-        }
-        if (Greenfoot.isKeyDown("down")) {
-            setLocation(getX(), getY() + speed);
-        }
+        handleMovement();
+    }    
+    private void handleMovement()
+    {
+        int dx = 0;
+        int dy = 0;
+        
         if (Greenfoot.isKeyDown("left")) {
-            setLocation(getX() - speed, getY());
+            dx -= speed;
         }
         if (Greenfoot.isKeyDown("right")) {
-            setLocation(getX() + speed, getY());
+            dx += speed;
         }
-    }    
+        if (Greenfoot.isKeyDown("up")) {
+            dy -= speed;
+        }
+        if (Greenfoot.isKeyDown("down")) {
+            dy += speed;
+        }
+        
+        // 画面端を越えないように移動
+        setLocation(
+            Math.max(0, Math.min(getX() + dx, getWorld().getWidth() - 1)),
+            Math.max(0, Math.min(getY() + dy, getWorld().getHeight() - 1))
+        );
+    }
 }
