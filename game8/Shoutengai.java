@@ -18,8 +18,9 @@ public class Shoutengai extends World
     {    
         // Create a new world with 600x400 cells with a cell size of 1x1 pixels.
         super(800, 655, 1); 
-        addObject(new foodman(), 0, 500);
-        addObject(new tenshu1(), 100, 100);
-        addObject(new tenshu2(), 500, 300);
+        
+        tenshu1 enemy1 = new tenshu1(); 
+        addObject(enemy1, 50, 50);
+
     }
 }
