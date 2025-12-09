@@ -1,4 +1,4 @@
-import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
+import greenfoot.*;
 
 /**
  * Write a description of class C here.
@@ -6,14 +6,18 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
  * @author (your name) 
  * @version (a version number or a date)
  */
-public class tenshu1
- extends Actor
+
+public class tenshu1 extends Actor
 {
     private int speed = 2;
-    /**
-     * Act - do whatever the C wants to do. This method is called whenever
-     * the 'Act' or 'Run' button gets pressed in the environment.
-     */
+
+    // ★★ 画像サイズはコンストラクタで変更する ★★
+    public tenshu1() {
+        GreenfootImage img = new GreenfootImage("店主.png");
+        img.scale(129, 175);
+        setImage(img);
+    }
+
     public void act() 
     {
         foodman protagonist = (foodman) getWorld().getObjects(foodman.class).get(0);
@@ -23,15 +27,16 @@ public class tenshu1
             int protagonistX = protagonist.getX();
             int protagonistY = protagonist.getY();
             
-            turnTowards(protagonistX,protagonistY);
-            
+            turnTowards(protagonistX, protagonistY);
             move(speed);
             
             if (this.intersects(protagonist)) 
             {
-                 Greenfoot.stop(); 
-                 getWorld().showText("GAME OVER", getWorld().getWidth() / 2, getWorld().getHeight() / 2);
+                Greenfoot.stop(); 
+                getWorld().showText("GAME OVER",
+                    getWorld().getWidth() / 2,
+                    getWorld().getHeight() / 2);
             }
         }
-    }    
+    }
 }

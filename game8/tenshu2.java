@@ -1,20 +1,42 @@
-import greenfoot.*; 
+import greenfoot.*;
+
+/**
+ * Write a description of class C here.
+ * 
+ * @author (your name) 
+ * @version (a version number or a date)
+ */
 
 public class tenshu2 extends Actor
 {
+    private int speed = 2;
+
+    // ★★ 画像サイズはコンストラクタで変更する ★★
+    public tenshu2() {
+        GreenfootImage img = new GreenfootImage("店主.png");
+        img.scale(129, 175);
+        setImage(img);
+    }
+
     public void act() 
     {
-        Actor actor = getOneIntersectingObject(foodman.class); 
+        foodman protagonist = (foodman) getWorld().getObjects(foodman.class).get(0);
         
-        if (actor != null) {
-            getWorld().showText("GAME OVER", getWorld().getWidth()/2, getWorld().getHeight()/2);
-            Greenfoot.stop();
-            return;
+        if(protagonist != null)
+        {
+            int protagonistX = protagonist.getX();
+            int protagonistY = protagonist.getY();
+            
+            turnTowards(protagonistX, protagonistY);
+            move(speed);
+            
+            if (this.intersects(protagonist)) 
+            {
+                Greenfoot.stop(); 
+                getWorld().showText("GAME OVER",
+                    getWorld().getWidth() / 2,
+                    getWorld().getHeight() / 2);
+            }
         }
-
-        int randomTurn = Greenfoot.getRandomNumber(21) - 10; 
-        turn(randomTurn);
-        
-        move(4);
     }
 }
