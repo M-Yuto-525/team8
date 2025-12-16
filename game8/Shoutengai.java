@@ -74,7 +74,7 @@ public class Shoutengai extends World
     private void placeActors()
     {
         // --- 固定キャラの配置 ---
-        addObject(new foodman(), 50, 500); // ※座標調整: 壁と被らないように少しずらしました
+        addObject(new foodman(), 71, 500); // ※座標調整: 壁と被らないように少しずらしました
         addObject(new tenshu1(), 100, 100);
         addObject(new tenshu2(), 500, 300);
 
