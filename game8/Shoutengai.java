@@ -74,7 +74,7 @@ public class Shoutengai extends World
     {
         // --- 固定キャラの配置 ---
         addObject(new foodman(), 71, 500); 
-        addObject(new tenshu1(), 78, 100);
+        addObject(new tenshu1(), 75, 100);
         addObject(new tenshu2(), 500, 300);
 
         // --- ランダムアイテムの配置 ---

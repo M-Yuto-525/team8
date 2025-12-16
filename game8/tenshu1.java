@@ -19,28 +19,31 @@ public class tenshu1 extends Actor
         foodman protagonist = (foodman)getWorld().getObjects(foodman.class).get(0);
         if (protagonist == null) return;
 
-        // 初回フレームは動かさず方向決定だけ
         if (!initialized) {
             initialized = true;
-            direction = -1; // 初期方向未決定
-            snapToGrid();   // 座標をグリッドに合わせて壁に埋まらないように
+            direction = -1; 
+            snapToGrid();   
             return;
         }
 
-        // 移動方向を選ぶ
-        if (direction == -1 || !canMove(direction)) {
+        // 修正点：マスの中心（交差点）に来たとき、または動けないときに方向を決める
+        if (isAtIntersection() || direction == -1 || !canMove(direction)) {
             chooseBestDirection(protagonist);
         }
 
-        // 移動・向き更新
         moveInDirection(direction);
         turnToDirection(direction);
 
-        // 接触でゲームオーバー
         if (isTouching(foodman.class)) {
             getWorld().showText("GAME OVER", getWorld().getWidth()/2, getWorld().getHeight()/2);
             Greenfoot.stop();
         }
+    }
+    // 新しいメソッドを追加：マスの中心にいるか判定
+    private boolean isAtIntersection()
+    {
+        // 座標を50で割った余りが25（中心）ならtrue
+        return (getX() % TILE_SIZE == TILE_SIZE / 2) && (getY() % TILE_SIZE == TILE_SIZE / 2);
     }
 
     private boolean canMove(int dir)
@@ -74,6 +77,14 @@ public class tenshu1 extends Actor
         java.util.List<Integer> dirs = new java.util.ArrayList<>();
         for (int d = 0; d < 4; d++) if (canMove(d)) dirs.add(d);
         if (dirs.isEmpty()) return;
+        
+        // 進行方向の「逆（後ろ）」を計算 (例: 上(0)なら下(2))
+        int back = (direction + 2) % 4;
+        
+        // 「行き止まり」じゃない限り、後ろには戻らないように選択肢から消す
+        if (dirs.contains(back) && dirs.size() > 1) {
+            dirs.remove((Integer)back);
+        }
 
         int bestDir = dirs.get(0);
         int bestDist = Integer.MAX_VALUE;
@@ -99,7 +110,6 @@ public class tenshu1 extends Actor
             case 2: setLocation(getX(), getY() + speed); break;
             case 3: setLocation(getX() - speed, getY()); break;
         }
-        snapToGrid();
     }
 
     private void turnToDirection(int dir)
@@ -109,8 +119,8 @@ public class tenshu1 extends Actor
 
     private void snapToGrid()
     {
-        int x = ((getX() + TILE_SIZE/4)/TILE_SIZE)*TILE_SIZE;
-        int y = ((getY() + TILE_SIZE/4)/TILE_SIZE)*TILE_SIZE;
+        int x = (getX() / TILE_SIZE) * TILE_SIZE + TILE_SIZE / 2;
+        int y = (getY() / TILE_SIZE) * TILE_SIZE + TILE_SIZE / 2;
         setLocation(x, y);
     }
 }
