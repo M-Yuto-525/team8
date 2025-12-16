@@ -4,7 +4,7 @@ public class manganiku extends Actor
 {
     public manganiku() {
         GreenfootImage img = new GreenfootImage("漫画肉.png");
-        img.scale(100, 100);
+        img.scale(50, 50);
         setImage(img);
     }
 

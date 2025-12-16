@@ -4,7 +4,7 @@ public class tyaahan extends Actor
 {
     public tyaahan() {
         GreenfootImage img = new GreenfootImage("チャーハン.png");
-        img.scale(100, 100);
+        img.scale(50, 50);
         setImage(img);
     }
 

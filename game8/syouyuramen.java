@@ -4,7 +4,7 @@ public class syouyuramen extends Actor
 {
     public syouyuramen() {
         GreenfootImage img = new GreenfootImage("醤油ラーメン.png");
-        img.scale(100, 100);
+        img.scale(50, 50);
         setImage(img);
     }
 

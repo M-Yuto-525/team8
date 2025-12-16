@@ -4,7 +4,7 @@ public class gyuudon extends Actor {
 
     public gyuudon() {
         GreenfootImage img = new GreenfootImage("牛丼.png");
-        img.scale(100, 100);
+        img.scale(50, 50);
         setImage(img);
     }
 
