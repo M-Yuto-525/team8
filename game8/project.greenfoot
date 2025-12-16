@@ -1,18 +1,22 @@
 #Greenfoot project file
 class.Shoutengai.image=test\u5546\u5E97\u8857.png
+<<<<<<< Updated upstream
 class.foodman.image=\u30D5\u30FC\u30C9\u30DE\u30F3.png
 class.gyuudon.image=\u725B\u4E3C.png
 class.manganiku.image=\u6F2B\u753B\u8089.png
 class.syouyuramen.image=\u91A4\u6CB9\u30E9\u30FC\u30E1\u30F3.png
+=======
+class.foodman.image=\u30D5\u30FC\u30C9\u30DE\u30F3.jpg
+>>>>>>> Stashed changes
 class.tenshu1.image=\u5E97\u4E3B.png
 class.tenshu2.image=\u5E97\u4E3B.png
 class.testtarou.image=man01.png
 class.tyaahan.image=\u30C1\u30E3\u30FC\u30CF\u30F3.png
 dependency1.from=Shoutengai
-dependency1.to=foodman
+dependency1.to=tenshu1
 dependency1.type=UsesDependency
 dependency2.from=Shoutengai
-dependency2.to=tenshu1
+dependency2.to=foodman
 dependency2.type=UsesDependency
 dependency3.from=Shoutengai
 dependency3.to=tenshu2
@@ -23,6 +27,7 @@ dependency4.type=UsesDependency
 dependency5.from=Shoutengai
 dependency5.to=manganiku
 dependency5.type=UsesDependency
+<<<<<<< Updated upstream
 dependency6.from=Shoutengai
 dependency6.to=syouyuramen
 dependency6.type=UsesDependency
@@ -42,6 +47,15 @@ editor.fx.0.y=142
 height=835
 package.numDependencies=9
 package.numTargets=12
+=======
+editor.fx.0.height=0
+editor.fx.0.width=0
+editor.fx.0.x=0
+editor.fx.0.y=0
+height=1056
+package.numDependencies=5
+package.numTargets=5
+>>>>>>> Stashed changes
 project.charset=UTF-8
 publish.hasSource=false
 publish.locked=true

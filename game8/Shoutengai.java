@@ -9,6 +9,7 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
  */
 public class Shoutengai extends World {
 
+
     public Shoutengai() {    
         super(800, 655, 1);
 
@@ -46,6 +47,10 @@ public class Shoutengai extends World {
                 e.printStackTrace();
             }
         }
-    }
+    /**
+     * Constructor for objects of class Shoutengai.
+     * 
+     */
+}
 }
 
