@@ -18,7 +18,7 @@ public class foodman extends Actor
         if (Greenfoot.isKeyDown("down"))  setLocation(getX(), getY() + speed);lastKeyPressed="down";
         if (Greenfoot.isKeyDown("left"))  setLocation(getX() - speed, getY());lastKeyPressed="left";
         if (Greenfoot.isKeyDown("right")) setLocation(getX() + speed, getY());lastKeyPressed="right";
-        if(isTouching(Wall.class)){
+        if(isTouching(Brick.class)){
             if (Greenfoot.isKeyDown("up"))    setLocation(getX(), getY() + speed);
             if (Greenfoot.isKeyDown("down"))  setLocation(getX(), getY() - speed);
             if (Greenfoot.isKeyDown("left"))  setLocation(getX() + speed, getY());
