@@ -8,7 +8,7 @@ public class foodman extends Actor
     // コンストラクタ（最初に1回だけ呼ばれる）
     public foodman() {
         GreenfootImage img = getImage();
-        img.scale(img.getWidth() / 2, img.getHeight() / 2);
+        img.scale(30,30);
         setImage(img);
     }
 
