@@ -1,85 +1,103 @@
-import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
+import greenfoot.*;
 
 public class Shoutengai extends World
 {
     private static final int TILE_SIZE = 50;
 
-    // 【変更点1】map配列をここで宣言して、placeActorsでも中身を見れるようにする
+    // ===== ゲーム管理 =====
+    private boolean gameEnd = false;
+    private int initialFoodCount;
+
+    // 制限時間（2分）
+    private int timer = 120 * 60;
+
+    // ===== マップ =====
     private String[] map = {
-        "1111111111111111", // 外壁
+        "1111111111111111",
         "1000000110000001", 
         "1011110110111101", 
         "1010000000000101", 
         "1010111001110101", 
         "1000100000010001", 
-        "1110101111010111", // 真ん中あたり
+        "1110101111010111",
         "1000100000010001", 
         "1010111001110101", 
         "1010000000000101", 
         "1011110110111101", 
         "1000000110000001", 
-        "1111111111111111"  // 外壁
+        "1111111111111111"
     };
 
     public Shoutengai()
     {    
-        // 画面サイズ: 800x665
-        super(800, 645, 1); 
-        
-        // 1. 壁（迷路）を作る
+        super(800, 645, 1);
+
         makeWalls();
-        
-        // 2. 人やアイテムを配置する
         placeActors();
+
+        // 初期の食べ物数を記録
+        initialFoodCount = getFoodCount();
     }
 
-    /**
-     * 迷路（壁）を生成するメソッド
-     */
+    public void act()
+    {
+        if (gameEnd) return;
+
+        // ===== タイマー =====
+        timer--;
+
+        if (timer <= 0) {
+            showGameOver();
+            gameEnd = true;
+            return;
+        }
+
+        // ===== スコア計算 =====
+        int eaten = initialFoodCount - getFoodCount();
+
+        // 残り時間ボーナス（秒 × 2）
+        int timeBonus = (timer / 60) * 2;
+
+        // 1個100点＋時間ボーナス
+        int score = eaten * (100 + timeBonus);
+
+        showStatus(score);
+
+        // ===== クリア判定 =====
+        if (getFoodCount() == 0) {
+            showGameClear(score);
+            gameEnd = true;
+        }
+    }
+
+    // ===== 壁生成 =====
     private void makeWalls()
     {
-        // ここにあった String[] map は上に移動しました
-        createMap(map);
-    }
-
-    /**
-     * 設計図を読み込んで壁を配置する処理
-     */
-    private void createMap(String[] map) {
         for (int y = 0; y < map.length; y++) {
-            String row = map[y];
-            for (int x = 0; x < row.length(); x++) {
-                
-                if (x >= row.length()) break; 
-                
-                char tile = row.charAt(x);
-                
-                // '1' ならレンガ(Brick)を置く
-                if (tile == '1') {
-                    Brick brick = new Brick();
-                    
-                    int xPos = x * TILE_SIZE + TILE_SIZE / 2;
-                    int yPos = y * TILE_SIZE + TILE_SIZE / 2;
-                    
-                    addObject(brick, xPos, yPos);
+            for (int x = 0; x < map[y].length(); x++) {
+                if (map[y].charAt(x) == '1') {
+                    addObject(
+                        new Brick(),
+                        x * TILE_SIZE + TILE_SIZE / 2,
+                        y * TILE_SIZE + TILE_SIZE / 2
+                    );
                 }
             }
         }
     }
 
-    /**
-     * 人や食べ物を配置するメソッド
-     */
+    // ===== キャラ・食べ物配置 =====
     private void placeActors()
     {
+
         // --- 固定キャラの配置 ---
         addObject(new foodman(), 71, 500); 
         addObject(new tenshu1(), 75, 100);
+
+        addObject(new foodman(), 71, 500);
+        addObject(new tenshu1(), 78, 100);
         addObject(new tenshu2(), 500, 300);
 
-        // --- ランダムアイテムの配置 ---
-
-        // ご飯系クラスのリスト
         Class[] foods = {
             gyuudon.class,
             manganiku.class,
@@ -87,38 +105,61 @@ public class Shoutengai extends World
             tyaahan.class
         };
 
-        // 【変更点2】壁と重ならないように配置するロジック
         for (int i = 0; i < 5; i++) {
-            Class foodClass = foods[(int)(Math.random() * foods.length)];
-
-            int gridX = 0;
-            int gridY = 0;
-            
-            // "通路('0')"が見つかるまでランダムに場所を選び直す
+            int gx, gy;
             while (true) {
-                // マップの配列サイズに合わせてランダムなインデックス(0〜15など)を決める
-                gridX = Greenfoot.getRandomNumber(map[0].length());
-                gridY = Greenfoot.getRandomNumber(map.length);
-                
-                // 選んだ場所が '0' (通路) ならOKとしてループを抜ける
-                // ※ charAtで文字を取得して判定
-                if (map[gridY].charAt(gridX) == '0') {
-                    break;
-                }
+                gx = Greenfoot.getRandomNumber(map[0].length());
+                gy = Greenfoot.getRandomNumber(map.length);
+                if (map[gy].charAt(gx) == '0') break;
             }
 
-            // マス目のインデックスをピクセル座標に変換する
-            // (マスの中心に置くために + TILE_SIZE / 2 をする)
-            int x = gridX * TILE_SIZE + TILE_SIZE / 2;
-            int y = gridY * TILE_SIZE + TILE_SIZE / 2;
-
             try {
-                // インスタンス生成
-                Actor food = (Actor) foodClass.newInstance();
-                addObject(food, x, y);
+                Actor food = (Actor) foods[
+                    Greenfoot.getRandomNumber(foods.length)
+                ].newInstance();
+
+                addObject(
+                    food,
+                    gx * TILE_SIZE + TILE_SIZE / 2,
+                    gy * TILE_SIZE + TILE_SIZE / 2
+                );
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
+    }
+
+    // ===== 食べ物数取得 =====
+    private int getFoodCount()
+    {
+        return  getObjects(gyuudon.class).size()
+              + getObjects(manganiku.class).size()
+              + getObjects(syouyuramen.class).size()
+              + getObjects(tyaahan.class).size();
+    }
+
+    // ===== 表示 =====
+    private void showStatus(int score)
+    {
+        // 左上：TIME
+        showText("TIME : " + (timer / 60), 80, 30);
+
+        // 右上：SCORE
+        showText("SCORE : " + score, 700, 30);
+    }
+
+    // ===== クリア =====
+    private void showGameClear(int score)
+    {
+        showText("GAME CLEAR!", 400, 300);
+        showText("SCORE : " + score, 400, 350);
+        Greenfoot.stop();
+    }
+
+    // ===== ゲームオーバー =====
+    private void showGameOver()
+    {
+        showText("GAME OVER", 400, 300);
+        Greenfoot.stop();
     }
 }
