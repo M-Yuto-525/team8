@@ -1,11 +1,13 @@
 import greenfoot.*;
+import java.util.*;
 
 public class tenshu1 extends Actor
 {
-    private int speed = 1;           // 移動速度
-    private int direction = -1;      // 0=上,1=右,2=下,3=左, -1=初期未決定
-    private boolean initialized = false; // 初期フレーム判定
     private static final int TILE_SIZE = 50;
+
+    private int speed = 2;
+    private int direction = -1; // 0=上,1=右,2=下,3=左
+    private boolean initialized = false;
 
     public tenshu1()
     {
@@ -16,111 +18,125 @@ public class tenshu1 extends Actor
 
     public void act()
     {
-        foodman protagonist = (foodman)getWorld().getObjects(foodman.class).get(0);
-        if (protagonist == null) return;
+        Shoutengai world = (Shoutengai)getWorld();
+        foodman player = world.getPlayer();
+        if (player == null) return;
 
         if (!initialized) {
+            snapToGrid();
+            chooseDirection(world, player);
             initialized = true;
-            direction = -1; 
-            snapToGrid();   
             return;
         }
 
-        // 修正点：マスの中心（交差点）に来たとき、または動けないときに方向を決める
-        if (isAtIntersection() || direction == -1 || !canMove(direction)) {
-            chooseBestDirection(protagonist);
+        // タイル中央でのみ方向変更
+        if (isAtCenter()) {
+            chooseDirection(world, player);
         }
 
         moveInDirection(direction);
         turnToDirection(direction);
 
         if (isTouching(foodman.class)) {
-            getWorld().showText("GAME OVER", getWorld().getWidth()/2, getWorld().getHeight()/2);
+            world.showText("GAME OVER",
+                world.getWidth()/2,
+                world.getHeight()/2);
             Greenfoot.stop();
         }
     }
-    // 新しいメソッドを追加：マスの中心にいるか判定
-    private boolean isAtIntersection()
+
+    // ===== タイル中央判定 =====
+    private boolean isAtCenter()
     {
-        // 座標を50で割った余りが25（中心）ならtrue
-        return (getX() % TILE_SIZE == TILE_SIZE / 2) && (getY() % TILE_SIZE == TILE_SIZE / 2);
+        return getX() % TILE_SIZE == TILE_SIZE / 2
+            && getY() % TILE_SIZE == TILE_SIZE / 2;
     }
 
-    private boolean canMove(int dir)
+    // ===== 方向選択 =====
+    private void chooseDirection(Shoutengai world, foodman player)
     {
-        int nx = getX();
-        int ny = getY();
-        int margin = 2; // 壁判定の余裕
+        List<Integer> dirs = new ArrayList<>();
 
-        switch (dir)
-        {
-            case 0: ny -= speed + margin; break; // 上
-            case 1: nx += speed + margin; break; // 右
-            case 2: ny += speed + margin; break; // 下
-            case 3: nx -= speed + margin; break; // 左
+        for (int d = 0; d < 4; d++) {
+            if (canMove(world, d)) dirs.add(d);
         }
-        return !isTouchingAt(nx, ny, Brick.class);
-    }
 
-    private boolean isTouchingAt(int x, int y, Class cls)
-    {
-        int oldX = getX();
-        int oldY = getY();
-        setLocation(x, y);
-        boolean hit = isTouching(cls);
-        setLocation(oldX, oldY);
-        return hit;
-    }
-
-    private void chooseBestDirection(foodman protagonist)
-    {
-        java.util.List<Integer> dirs = new java.util.ArrayList<>();
-        for (int d = 0; d < 4; d++) if (canMove(d)) dirs.add(d);
         if (dirs.isEmpty()) return;
-        
-        // 進行方向の「逆（後ろ）」を計算 (例: 上(0)なら下(2))
-        int back = (direction + 2) % 4;
-        
-        // 「行き止まり」じゃない限り、後ろには戻らないように選択肢から消す
-        if (dirs.contains(back) && dirs.size() > 1) {
+
+        // 後退禁止（行き止まり以外）
+        if (direction != -1 && dirs.size() > 1) {
+            int back = (direction + 2) % 4;
             dirs.remove((Integer)back);
         }
 
         int bestDir = dirs.get(0);
         int bestDist = Integer.MAX_VALUE;
-        for (int d : dirs)
-        {
+
+        for (int d : dirs) {
             int nx = getX();
             int ny = getY();
-            switch (d) { case 0: ny-=speed; break; case 1: nx+=speed; break; case 2: ny+=speed; break; case 3: nx-=speed; break; }
-            int dx = protagonist.getX() - nx;
-            int dy = protagonist.getY() - ny;
-            int dist = dx*dx + dy*dy;
-            if (dist < bestDist) { bestDist = dist; bestDir = d; }
+
+            switch (d) {
+                case 0: ny -= TILE_SIZE; break;
+                case 1: nx += TILE_SIZE; break;
+                case 2: ny += TILE_SIZE; break;
+                case 3: nx -= TILE_SIZE; break;
+            }
+
+            int dx = player.getX() - nx;
+            int dy = player.getY() - ny;
+            int dist = dx * dx + dy * dy;
+
+            if (dist < bestDist) {
+                bestDist = dist;
+                bestDir = d;
+            }
         }
+
         direction = bestDir;
     }
 
+    // ===== map判定 =====
+    private boolean canMove(Shoutengai world, int dir)
+    {
+        int gx = getX() / TILE_SIZE;
+        int gy = getY() / TILE_SIZE;
+
+        switch (dir) {
+            case 0: gy--; break;
+            case 1: gx++; break;
+            case 2: gy++; break;
+            case 3: gx--; break;
+        }
+
+        return world.isRoad(gx, gy);
+    }
+
+    // ===== 移動 =====
     private void moveInDirection(int dir)
     {
-        switch (dir)
-        {
-            case 0: setLocation(getX(), getY() - speed); break;
-            case 1: setLocation(getX() + speed, getY()); break;
-            case 2: setLocation(getX(), getY() + speed); break;
-            case 3: setLocation(getX() - speed, getY()); break;
+        switch (dir) {
+            case 0: setLocation(getX(), getY()-speed); break;
+            case 1: setLocation(getX()+speed, getY()); break;
+            case 2: setLocation(getX(), getY()+speed); break;
+            case 3: setLocation(getX()-speed, getY()); break;
         }
     }
 
     private void turnToDirection(int dir)
     {
-        switch (dir) { case 0: setRotation(270); break; case 1: setRotation(0); break; case 2: setRotation(90); break; case 3: setRotation(180); break; }
+        switch (dir) {
+            case 0: setRotation(270); break;
+            case 1: setRotation(0); break;
+            case 2: setRotation(90); break;
+            case 3: setRotation(180); break;
+        }
     }
 
     private void snapToGrid()
     {
-        int x = (getX() / TILE_SIZE) * TILE_SIZE + TILE_SIZE / 2;
-        int y = (getY() / TILE_SIZE) * TILE_SIZE + TILE_SIZE / 2;
+        int x = (getX()/TILE_SIZE)*TILE_SIZE + TILE_SIZE/2;
+        int y = (getY()/TILE_SIZE)*TILE_SIZE + TILE_SIZE/2;
         setLocation(x, y);
     }
 }
