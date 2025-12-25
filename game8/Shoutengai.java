@@ -7,6 +7,7 @@ public class Shoutengai extends World
     // ===== ゲーム管理 =====
     private boolean gameEnd = false;
     private int initialFoodCount;
+    private int maxScore = 0;   // ★ スコア固定用
 
     // 制限時間（2分）
     private int timer = 120 * 60;
@@ -54,18 +55,19 @@ public class Shoutengai extends World
 
         // ===== スコア計算 =====
         int eaten = initialFoodCount - getFoodCount();
-
-        // 残り時間ボーナス（秒 × 2）
         int timeBonus = (timer / 60) * 2;
-
-        // 1個100点＋時間ボーナス
         int score = eaten * (100 + timeBonus);
 
-        showStatus(score);
+        // ★ スコアが減らないようにする
+        if (score > maxScore) {
+            maxScore = score;
+        }
+
+        showStatus(maxScore);
 
         // ===== クリア判定 =====
         if (getFoodCount() == 0) {
-            showGameClear(score);
+            showGameClear(maxScore);
             gameEnd = true;
         }
     }
@@ -89,13 +91,8 @@ public class Shoutengai extends World
     // ===== キャラ・食べ物配置 =====
     private void placeActors()
     {
-
-        // --- 固定キャラの配置 ---
         addObject(new foodman(), 71, 500); 
         addObject(new tenshu1(), 75, 100);
-
-        addObject(new foodman(), 71, 500);
-        addObject(new tenshu1(), 78, 100);
         addObject(new tenshu2(), 500, 300);
 
         Class[] foods = {
@@ -141,10 +138,7 @@ public class Shoutengai extends World
     // ===== 表示 =====
     private void showStatus(int score)
     {
-        // 左上：TIME
         showText("TIME : " + (timer / 60), 80, 30);
-
-        // 右上：SCORE
         showText("SCORE : " + score, 700, 30);
     }
 
