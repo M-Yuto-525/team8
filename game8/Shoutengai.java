@@ -7,7 +7,7 @@ public class Shoutengai extends World
     // ===== ゲーム管理 =====
     private boolean gameEnd = false;
     private int initialFoodCount;
-    private int maxScore = 0;   // ★ スコア固定用
+    private int maxScore = 0;
 
     // 制限時間（2分）
     private int timer = 120 * 60;
@@ -35,8 +35,6 @@ public class Shoutengai extends World
 
         makeWalls();
         placeActors();
-
-        // 初期の食べ物数を記録
         initialFoodCount = getFoodCount();
     }
 
@@ -44,28 +42,23 @@ public class Shoutengai extends World
     {
         if (gameEnd) return;
 
-        // ===== タイマー =====
         timer--;
-
         if (timer <= 0) {
             showGameOver();
             gameEnd = true;
             return;
         }
 
-        // ===== スコア計算 =====
         int eaten = initialFoodCount - getFoodCount();
         int timeBonus = (timer / 60) * 2;
         int score = eaten * (100 + timeBonus);
 
-        // ★ スコアが減らないようにする
         if (score > maxScore) {
             maxScore = score;
         }
 
         showStatus(maxScore);
 
-        // ===== クリア判定 =====
         if (getFoodCount() == 0) {
             showGameClear(maxScore);
             gameEnd = true;
@@ -91,7 +84,7 @@ public class Shoutengai extends World
     // ===== キャラ・食べ物配置 =====
     private void placeActors()
     {
-        addObject(new foodman(), 71, 500); 
+        addObject(new foodman(), 75, 500); 
         addObject(new tenshu1(), 75, 100);
         addObject(new tenshu2(), 500, 300);
 
@@ -126,7 +119,22 @@ public class Shoutengai extends World
         }
     }
 
-    // ===== 食べ物数取得 =====
+    // ===== ★ 敵用：通路判定 =====
+    public boolean isRoad(int gx, int gy)
+    {
+        if (gy < 0 || gy >= map.length) return false;
+        if (gx < 0 || gx >= map[0].length()) return false;
+        return map[gy].charAt(gx) == '0';
+    }
+
+    // ===== ★ プレイヤー取得 =====
+    public foodman getPlayer()
+    {
+        if (getObjects(foodman.class).isEmpty()) return null;
+        return getObjects(foodman.class).get(0);
+    }
+
+    // ===== 食べ物数 =====
     private int getFoodCount()
     {
         return  getObjects(gyuudon.class).size()
@@ -142,7 +150,6 @@ public class Shoutengai extends World
         showText("SCORE : " + score, 700, 30);
     }
 
-    // ===== クリア =====
     private void showGameClear(int score)
     {
         showText("GAME CLEAR!", 400, 300);
@@ -150,7 +157,6 @@ public class Shoutengai extends World
         Greenfoot.stop();
     }
 
-    // ===== ゲームオーバー =====
     private void showGameOver()
     {
         showText("GAME OVER", 400, 300);
