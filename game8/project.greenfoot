@@ -1,7 +1,7 @@
 #Greenfoot project file
 class.Shoutengai.image=test\u5546\u5E97\u8857.png
 class.TitleScreen.image=\u8868\u7D19.png
-class.foodman.image=\u30D5\u30FC\u30C9\u30DE\u30F33.png
+class.foodman.image=\u30D5\u30FC\u30C9\u30DE\u30F33\ (1).png
 class.gyuudon.image=\u725B\u4E3C.png
 class.manganiku.image=\u6F2B\u753B\u8089.png
 class.syouyuramen.image=\u91A4\u6CB9\u30E9\u30FC\u30E1\u30F3.png
@@ -170,6 +170,6 @@ target9.x=0
 target9.y=0
 version=3.0.0
 width=1936
-world.lastInstantiated=TitleScreen
+world.lastInstantiated=Shoutengai
 xPosition=0
 yPosition=0
