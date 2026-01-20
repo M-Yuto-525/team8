@@ -7,7 +7,9 @@ public class Shoutengai extends World
     //======BGM=========
     private GreenfootSound bgm;
     private boolean bgmStarted = false;
-
+    
+    //======CLEARE=========
+    private GreenfootSound clear;
     // ===== ゲーム管理 =====
     private boolean gameEnd = false;
     private int initialFoodCount;
@@ -43,6 +45,9 @@ public class Shoutengai extends World
         
         bgm = new GreenfootSound("BGM.mp3");
         bgm.setVolume(40);
+        
+        clear = new GreenfootSound("gameclear.mp3");
+        clear.setVolume(60);
     }
 
     public void act()
@@ -101,6 +106,9 @@ public class Shoutengai extends World
         // BGM停止
         if (bgm != null && bgm.isPlaying()) {
             bgm.stop();
+        }
+        if(clear != null){
+            clear.play();
         }
         
         showText("GAME CLEAR!", 400, 300);
