@@ -3,6 +3,10 @@ import greenfoot.*;
 public class Shoutengai extends World
 {
     private static final int TILE_SIZE = 50;
+    
+    //======BGM=========
+    private GreenfootSound bgm;
+    private boolean bgmStarted = false;
 
     // ===== ゲーム管理 =====
     private boolean gameEnd = false;
@@ -36,16 +40,23 @@ public class Shoutengai extends World
         makeWalls();
         placeActors();
         initialFoodCount = getFoodCount();
+        
+        bgm = new GreenfootSound("BGM.mp3");
+        bgm.setVolume(40);
     }
 
     public void act()
     {
         if (gameEnd) return;
+        
+        if (!bgmStarted) {
+            bgm.playLoop();
+            bgmStarted = true;
+        }
 
         timer--;
         if (timer <= 0) {
-            showGameOver();
-            gameEnd = true;
+            triggerGameOver();  // ★メソッドを使う
             return;
         }
 
@@ -60,9 +71,41 @@ public class Shoutengai extends World
         showStatus(maxScore);
 
         if (getFoodCount() == 0) {
-            showGameClear(maxScore);
-            gameEnd = true;
+            triggerGameClear(maxScore);  // ★メソッドを使う
         }
+    }
+    
+    // ★★★ 他のクラスから呼び出せるゲームオーバーメソッド ★★★
+    public void triggerGameOver()
+    {
+        if (gameEnd) return;  // 既に終了していたら何もしない
+        
+        gameEnd = true;
+        
+        // BGM停止
+        if (bgm != null && bgm.isPlaying()) {
+            bgm.stop();
+        }
+        
+        showText("GAME OVER", 400, 300);
+        Greenfoot.stop();
+    }
+    
+    // ★★★ 他のクラスから呼び出せるゲームクリアメソッド ★★★
+    public void triggerGameClear(int score)
+    {
+        if (gameEnd) return;
+        
+        gameEnd = true;
+        
+        // BGM停止
+        if (bgm != null && bgm.isPlaying()) {
+            bgm.stop();
+        }
+        
+        showText("GAME CLEAR!", 400, 300);
+        showText("SCORE : " + score, 400, 350);
+        Greenfoot.stop();
     }
 
     // ===== 壁生成 =====
@@ -148,18 +191,5 @@ public class Shoutengai extends World
     {
         showText("TIME : " + (timer / 60), 80, 30);
         showText("SCORE : " + score, 700, 30);
-    }
-
-    private void showGameClear(int score)
-    {
-        showText("GAME CLEAR!", 400, 300);
-        showText("SCORE : " + score, 400, 350);
-        Greenfoot.stop();
-    }
-
-    private void showGameOver()
-    {
-        showText("GAME OVER", 400, 300);
-        Greenfoot.stop();
     }
 }

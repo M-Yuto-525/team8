@@ -38,10 +38,10 @@ public class tenshu2 extends Actor
         turnToDirection(direction);
 
         if (isTouching(foodman.class)) {
-            world.showText("GAME OVER",
-                world.getWidth()/2,
-                world.getHeight()/2);
-            Greenfoot.stop();
+            GreenfootSound hitSound = new GreenfootSound("attack.mp3");
+            hitSound.setVolume(70);  // お好みの音量に
+            hitSound.play();
+            world.triggerGameOver();
         }
     }
 

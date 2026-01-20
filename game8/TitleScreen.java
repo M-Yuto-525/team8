@@ -15,6 +15,9 @@ public class TitleScreen extends World
     {
         // スペースキーが押されたらゲーム(Shoutengai)を開始する
         if (Greenfoot.isKeyDown("space")) {
+            GreenfootSound startSound = new GreenfootSound("start.mp3");
+            startSound.setVolume(50);  // 0〜100で指定（50 = 半分の音量）
+            startSound.play();
             Greenfoot.setWorld(new Shoutengai());
         }
     }
